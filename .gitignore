@@ -1,0 +1,177 @@
+import java.lang.Math;
+public class CosThread extends Thread{
+	
+	public double deg;
+	public double res;
+	public double pow;
+	public double temp;
+	
+	
+	public CosThread (int degree, int power)
+	{
+		deg = degree;
+		pow = power;
+	}
+	
+	public void run()
+	{
+		System.out.println("Executing cos of "+deg+" and raising to the power of "+pow+".");
+		double Deg2Rad = Math.toRadians(deg);
+		temp = Math.cos(Deg2Rad);
+		res = Math.pow(temp, pow);
+		System.out.println("Exit from CosThread. Res = "+res);
+		
+		
+	}
+
+}
+
+import java.lang.Math;
+public class SinThread extends Thread{
+	
+	public double deg;
+	public double res;
+	public double pow;
+	public double temp;
+	
+	public SinThread (int degree, int power)
+	{
+		deg = degree;
+		pow = power;		
+	}
+	
+	public void run()
+	{
+		System.out.println("Executing sin of "+deg+" and raising to the power of "+pow+".");
+		double Deg2Rad = Math.toRadians(deg);
+		temp = Math.sin(Deg2Rad);
+		res = Math.pow(temp, pow);
+		System.out.println("Exit from SinThread. Res = "+res);
+	}
+
+}
+
+import java.lang.Math;
+public class TanThread extends Thread{
+	
+	public double deg;
+	public double res;
+	public double pow;
+	public double temp;
+	
+	public TanThread (int degree, int power)
+	{
+		deg = degree;
+		pow = power;		
+	}
+	
+	public void run()
+	{
+		
+		System.out.println("Executing tan of "+deg+" and raising to the power of "+pow+".");
+		double Deg2Rad = Math.toRadians(deg);
+		temp = Math.tan(Deg2Rad);
+		res = Math.pow(temp, pow);
+		System.out.println("Exit from TanThread. Res = "+res);
+		
+		
+		
+	}
+
+}
+
+
+public class SinCosTanThread extends Thread{
+	
+	public double deg;
+	public double res;
+	public double pow;
+	public double tempSin;
+	public double tempCos;
+	public double tempTan;
+	
+	
+	public SinCosTanThread (int degree, int power)
+	{
+		deg = degree;
+		pow = power;
+	}
+	
+	public void run()
+	{
+		System.out.println("Executing cos of "+deg+" and raising to the power of "+pow+".");
+		double Deg2Rad = Math.toRadians(deg);
+		tempSin = Math.sin(Deg2Rad);
+		tempCos = Math.cos(Deg2Rad);
+		tempTan = Math.tan(Deg2Rad);
+		res = Math.pow(tempSin, pow)+ Math.pow(tempCos, pow)+ Math.pow(tempTan, pow);
+		System.out.println("Exit from SinCosTanThread. Res = "+res);
+		
+		
+	}
+
+}
+
+
+
+import java.lang.Math;
+public class Main {	
+	
+
+	public static void main(String[] args) {
+		
+		int deg = 45;
+		int pow = 999999999;
+		double z = 0;
+		double x = 0;
+		
+		
+		
+		
+		SinThread st = new SinThread(deg,pow);
+		CosThread ct = new CosThread(deg,pow);
+		TanThread tt = new TanThread(deg,pow);
+		SinCosTanThread all = new SinCosTanThread(deg,pow);
+		
+		
+		long startMultiThreadTime = System.nanoTime();
+		st.start();
+		ct.start();
+		tt.start();
+		try{
+			st.join();
+			ct.join();
+			tt.join();
+			z = st.res + ct.res + tt.res;
+		}
+		catch(InterruptedException IntExp){
+			
+		}
+		long stoptMultiThreadTime = System.nanoTime();
+		
+		
+		
+		
+		long startSingleThreadTime = System.nanoTime();
+		all.start();
+		try{
+			all.join();
+			x = all.res;
+		}
+		catch(InterruptedException IntExp){
+			
+		}
+		long stoptSingleThreadTime = System.nanoTime();
+		
+
+		long multiThreadTime = stoptMultiThreadTime - startMultiThreadTime;
+		long singleThreadTime = stoptSingleThreadTime - startSingleThreadTime;
+		
+		System.out.println("MultiThread result is "+z+", and it takes "+multiThreadTime+" nanoseconds");
+		System.out.println("SingleThread result is "+x+", and it takes "+singleThreadTime+" nanoseconds");
+	}
+
+}
+
+
+
